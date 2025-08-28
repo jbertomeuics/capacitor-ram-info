@@ -42,6 +42,7 @@
     "docgen": "docgen --api CapacitorRAMInfoPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
     "clean": "rimraf ./dist",
+    "prepare": "npm run build",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
