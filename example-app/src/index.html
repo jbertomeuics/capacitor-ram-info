@@ -1,25 +1,362 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="hydrated">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <title>Example Capacitor App</title>
-    <meta
-      name="viewport"
-      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <title>RAM Info Plugin Test</title>
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f8f9fa;
+        color: #2c3e50;
+        line-height: 1.5;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+      
+      .container {
+        max-width: 100%;
+        padding: 16px;
+      }
+      
+      .header {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      
+      .header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+      }
+      
+      .header p {
+        font-size: 14px;
+        color: #666;
+      }
+      
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid #e9ecef;
+      }
+      
+      .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #1a1a1a;
+      }
+      
+      .input-group {
+        margin-bottom: 16px;
+      }
+      
+      .input-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #495057;
+      }
+      
+      .input-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 16px;
+        background: #fff;
+        transition: border-color 0.2s;
+      }
+      
+      .input-group input:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+      
+      .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin: 4px;
+        min-height: 44px;
+        text-align: center;
+      }
+      
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+      
+      .btn-primary:hover:not(:disabled) {
+        background: #0056b3;
+        transform: translateY(-1px);
+      }
+      
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+      
+      .btn-success:hover:not(:disabled) {
+        background: #1e7e34;
+      }
+      
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+      
+      .btn-danger:hover:not(:disabled) {
+        background: #c82333;
+      }
+      
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      
+      .btn-group .btn {
+        flex: 1;
+        margin: 0;
+        min-width: 120px;
+      }
+      
+      .result {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        word-break: break-word;
+      }
+      
+      .result.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      
+      .result.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f1b6bb;
+      }
+      
+      .ram-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      
+      @media (min-width: 480px) {
+        .ram-summary {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      
+      .ram-stat {
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid #e9ecef;
+      }
+      
+      .ram-stat-value {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+      }
+      
+      .ram-stat-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .progress-container {
+        margin: 16px 0;
+      }
+      
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #495057;
+        margin-bottom: 8px;
+      }
+      
+      .progress-bar {
+        background: #e9ecef;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+        background: #007bff;
+      }
+      
+      .progress-fill.warning {
+        background: #ffc107;
+      }
+      
+      .progress-fill.danger {
+        background: #dc3545;
+      }
+      
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .status-badge.ok {
+        background: #d4edda;
+        color: #155724;
+      }
+      
+      .status-badge.warning {
+        background: #fff3cd;
+        color: #856404;
+      }
+      
+      .status-badge.danger {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      
+      .details {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 16px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        color: #495057;
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #e9ecef;
+        white-space: pre-wrap;
+      }
+      
+      .timestamp {
+        color: #6c757d;
+        font-size: 12px;
+      }
+      
+      .hidden {
+        display: none;
+      }
+      
+      @media (max-width: 480px) {
+        .container {
+          padding: 12px;
+        }
+        
+        .card {
+          padding: 16px;
+          margin-bottom: 12px;
+        }
+        
+        .btn-group {
+          flex-direction: column;
+        }
+        
+        .btn-group .btn {
+          flex: none;
+        }
+        
+        .ram-summary {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main>
-      <h1>Capacitor Test Plugin Project</h1>
-      <p>
-        This project can be used to test out the functionality of your plugin. Nothing in the
-        <em>example-app/</em> folder will be published to npm when using this template, so you can create away!
-      </p>
-      <label for="echoInput">Echo Text:</label>
-      <input type="text" id="echoInput" name="echoInput" value="Hello World!" />
-      <button onclick="testEcho()">Click Me!</button>
-    </main>
+    <div class="container">
+      <div class="header">
+        <h1>RAM Monitor</h1>
+        <p>Test du plugin Capacitor RAM Info</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Test Echo</div>
+        <div class="input-group">
+          <label for="echoInput">Message à tester:</label>
+          <input type="text" id="echoInput" value="Hello World!" placeholder="Entrez votre message...">
+        </div>
+        <button class="btn btn-primary" onclick="testEcho()">Tester Echo</button>
+        <div id="echoResult"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Informations RAM</div>
+        
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="getRAMInfo()" id="ramButton">
+            Analyser
+          </button>
+          <button class="btn btn-success" onclick="startMonitoring()" id="monitorButton">
+            Monitor
+          </button>
+          <button class="btn btn-danger" onclick="stopMonitoring()" id="stopButton" disabled>
+            Stop
+          </button>
+        </div>
+        
+        <div id="ramSummary" class="hidden">
+          <div class="ram-summary" id="ramStats"></div>
+          
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Utilisation mémoire</span>
+              <span id="progressText">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="ramDetails" class="details hidden"></div>
+      </div>
+    </div>
 
     <script src="./js/example.js" type="module"></script>
   </body>
