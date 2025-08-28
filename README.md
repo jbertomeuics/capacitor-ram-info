@@ -51,56 +51,59 @@ console.log('Mémoire faible?', ramInfo.isLowMemory);
 
 <docgen-index>
 
-* [`getMemoryInfo()`](#getmemoryinfo)
 * [`echo(...)`](#echo)
+* [`getMemoryInfo()`](#getmemoryinfo)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
 <docgen-api>
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-#### getMemoryInfo()
-
-```typescript
-getMemoryInfo() => Promise<MemoryInfo>
-```
-
-Récupère les informations détaillées sur la mémoire du système.
-
-**Retourne:** <code>Promise&lt;<a href="#memoryinfo">MemoryInfo</a>&gt;</code>
-
---------------------
-
-#### echo(...)
+### echo(...)
 
 ```typescript
 echo(options: { value: string; }) => Promise<{ value: string; }>
 ```
 
-Fonction de test pour vérifier que le plugin fonctionne.
-
 | Param         | Type                            |
 | ------------- | ------------------------------- |
 | **`options`** | <code>{ value: string; }</code> |
 
-**Retourne:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
 
-### Interface MemoryInfo
 
-| Prop                | Type                 | Description                                    |
-| ------------------- | -------------------- | ---------------------------------------------- |
-| **`totalRam`**      | <code>number</code>  | RAM totale en bytes                            |
-| **`availableRam`**  | <code>number</code>  | RAM disponible en bytes                        |
-| **`usedRam`**       | <code>number</code>  | RAM utilisée en bytes                          |
-| **`threshold`**     | <code>number</code>  | Seuil critique du système en bytes             |
-| **`isLowMemory`**   | <code>boolean</code> | `true` si la mémoire est faible                |
-| **`totalRamMB`**    | <code>number</code>  | RAM totale en MB                               |
-| **`availableRamMB`** | <code>number</code>  | RAM disponible en MB                           |
-| **`usedRamMB`**     | <code>number</code>  | RAM utilisée en MB                             |
-| **`thresholdMB`**   | <code>number</code>  | Seuil critique en MB                           |
-| **`usedPercentage`** | <code>number</code>  | Pourcentage d'utilisation (0-100)             |
-| **`status`**        | <code>string</code>  | Statut textuel: "OK" ou "LOW"                 |
+### getMemoryInfo()
+
+```typescript
+getMemoryInfo() => Promise<MemoryInfo>
+```
+
+**Returns:** <code>Promise&lt;<a href="#memoryinfo">MemoryInfo</a>&gt;</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### MemoryInfo
+
+| Prop                 | Type                 |
+| -------------------- | -------------------- |
+| **`totalRam`**       | <code>number</code>  |
+| **`availableRam`**   | <code>number</code>  |
+| **`usedRam`**        | <code>number</code>  |
+| **`threshold`**      | <code>number</code>  |
+| **`isLowMemory`**    | <code>boolean</code> |
+| **`totalRamMB`**     | <code>number</code>  |
+| **`availableRamMB`** | <code>number</code>  |
+| **`usedRamMB`**      | <code>number</code>  |
+| **`thresholdMB`**    | <code>number</code>  |
+| **`usedPercentage`** | <code>number</code>  |
+| **`status`**         | <code>string</code>  |
 
 </docgen-api>
 
